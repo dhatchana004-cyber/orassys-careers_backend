@@ -176,6 +176,27 @@ exports.updateApplicationStatus = async (req, res) => {
   }
 };
 
+exports.deleteApplication = async (req, res) => {
+  try {
+    const application = await Application.findByPk(req.params.id);
+    if (!application) return res.status(404).json({ success: false, message: 'Application not found' });
+    
+    if (application.resume) {
+      const fs = require('fs');
+      const path = require('path');
+      const filePath = path.join(__dirname, '../../uploads', application.resume.split(/[\\/]/).pop());
+      if (fs.existsSync(filePath)) {
+        fs.unlinkSync(filePath);
+      }
+    }
+
+    await application.destroy();
+    res.status(200).json({ success: true, message: 'Application deleted successfully' });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
 // --- DASHBOARD ---
 
 exports.getDashboardStats = async (req, res) => {

@@ -2,7 +2,7 @@ const express = require('express');
 const { 
   createJob, getJobs, getJob, updateJob, deleteJob, updateJobStatus,
   getUsers, getUser, updateUserStatus, deleteUser,
-  getApplications, getApplication, updateApplicationStatus,
+  getApplications, getApplication, updateApplicationStatus, deleteApplication,
   getDashboardStats 
 } = require('../controllers/adminController');
 const { protect, authorize } = require('../middleware/auth');
@@ -34,5 +34,6 @@ router.delete('/users/:id', deleteUser);
 router.get('/applications', getApplications);
 router.get('/applications/:id', getApplication);
 router.patch('/applications/:id/status', updateApplicationStatus);
+router.delete('/applications/:id', deleteApplication);
 
 module.exports = router;

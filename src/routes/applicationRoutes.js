@@ -1,11 +1,14 @@
 const express = require('express');
-const { createApplication, getMyApplications, getMyApplication } = require('../controllers/applicationController');
+const { createApplication, getMyApplications, getMyApplication, parseResume } = require('../controllers/applicationController');
 const { protect } = require('../middleware/auth');
 const upload = require('../middleware/upload');
 
 const router = express.Router();
 
-// Apply protection to all routes
+// Public route for parsing resumes
+router.post('/parse-resume', upload.single('resume'), parseResume);
+
+// Apply protection to all other routes
 router.use(protect);
 
 router.post('/', upload.single('resume'), createApplication);
