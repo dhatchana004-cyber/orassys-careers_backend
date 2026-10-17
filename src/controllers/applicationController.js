@@ -1,6 +1,7 @@
 const { Application, Job } = require('../models');
 const { sendCandidateConfirmationEmail, sendHRNotificationEmail } = require('../utils/mailer');
 const pdfParse = require('pdf-parse');
+const { extractTextFromResume, calculateATSScore } = require('../services/atsService');
 
 // @desc    Apply for a job
 // @route   POST /api/applications
@@ -38,6 +39,30 @@ exports.createApplication = async (req, res) => {
       return res.status(400).json({ success: false, message: 'Resume is required' });
     }
 
+    // Evaluate ATS Score automatically on submit
+    let atsScore = null;
+    let atsBreakdown = null;
+    try {
+      const resumeText = await extractTextFromResume(req.file.path);
+      const atsResult = calculateATSScore({
+        resumeText,
+        candidate: {
+          fullName,
+          email,
+          phone,
+          highestQualification,
+          totalExperience,
+          keyTechStack,
+          portfolioLink
+        },
+        job
+      });
+      atsScore = atsResult.totalScore;
+      atsBreakdown = atsResult;
+    } catch (atsErr) {
+      console.error('ATS evaluation error on createApplication:', atsErr.message);
+    }
+
     // Create application
     const application = await Application.create({
       userId: req.user.id,
@@ -56,6 +81,8 @@ exports.createApplication = async (req, res) => {
       resume: req.file.path,
       coverLetter,
       additionalInformation,
+      atsScore,
+      atsBreakdown,
     });
 
     // Send emails
@@ -256,5 +283,67 @@ exports.parseResume = async (req, res) => {
       if (fs.existsSync(req.file.path)) fs.unlinkSync(req.file.path);
     }
     res.status(200).json({ success: true, data: {} });
+  }
+};
+
+// @desc    Check ATS score for a resume against a job without applying (Candidate test tool)
+// @route   POST /api/applications/check-ats
+// @access  Public
+exports.checkResumeATS = async (req, res) => {
+  try {
+    if (!req.file) {
+      return res.status(400).json({ success: false, message: 'No resume file uploaded' });
+    }
+
+    const fs = require('fs');
+    const { jobId, targetRole, requiredSkills, experience } = req.body;
+
+    let targetJob = null;
+    if (jobId) {
+      targetJob = await Job.findByPk(jobId);
+    }
+
+    // Build job object
+    const jobData = targetJob ? {
+      title: targetJob.title,
+      requiredSkills: targetJob.requiredSkills,
+      experience: targetJob.experience,
+      qualifications: targetJob.qualifications,
+      description: targetJob.description
+    } : {
+      title: targetRole || 'Software Professional',
+      requiredSkills: requiredSkills ? (Array.isArray(requiredSkills) ? requiredSkills : requiredSkills.split(/[,|\n]/)) : [],
+      experience: experience || '1-3 Years',
+      qualifications: [],
+      description: ''
+    };
+
+    const resumeText = await extractTextFromResume(req.file.path);
+    const atsResult = calculateATSScore({
+      resumeText,
+      candidate: {
+        totalExperience: req.body.totalExperience || '',
+        highestQualification: req.body.highestQualification || '',
+        keyTechStack: req.body.keyTechStack || ''
+      },
+      job: jobData
+    });
+
+    // Remove temp file
+    if (fs.existsSync(req.file.path)) {
+      fs.unlinkSync(req.file.path);
+    }
+
+    res.status(200).json({
+      success: true,
+      data: atsResult
+    });
+  } catch (error) {
+    console.error('Error checking ATS:', error);
+    if (req.file && req.file.path) {
+      const fs = require('fs');
+      if (fs.existsSync(req.file.path)) fs.unlinkSync(req.file.path);
+    }
+    res.status(500).json({ success: false, message: error.message });
   }
 };

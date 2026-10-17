@@ -134,8 +134,8 @@ exports.getApplications = async (req, res) => {
   try {
     const applications = await Application.findAll({
       include: [
-        { model: Job, as: 'job', attributes: ['title', 'department'] },
-        { model: User, as: 'user', attributes: ['name', 'email'] }
+        { model: Job, as: 'job', attributes: ['title', 'department', 'requiredSkills', 'location'] },
+        { model: User, as: 'user', attributes: ['name', 'email', 'phone'] }
       ],
       order: [['createdAt', 'DESC']]
     });
@@ -193,6 +193,123 @@ exports.deleteApplication = async (req, res) => {
     await application.destroy();
     res.status(200).json({ success: true, message: 'Application deleted successfully' });
   } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+// @desc    Scan ATS score for a single application
+// @route   POST /api/admin/applications/:id/scan-ats
+// @access  Admin
+exports.scanApplicationATS = async (req, res) => {
+  try {
+    const application = await Application.findByPk(req.params.id, {
+      include: [{ model: Job, as: 'job' }]
+    });
+
+    if (!application) {
+      return res.status(404).json({ success: false, message: 'Application not found' });
+    }
+
+    if (!application.resume) {
+      return res.status(400).json({ success: false, message: 'No resume associated with this application' });
+    }
+
+    // Resolve resume file path
+    const fs = require('fs');
+    const path = require('path');
+    let resumePath = application.resume;
+    if (!fs.existsSync(resumePath)) {
+      const fileName = resumePath.split(/[\\/]/).pop();
+      resumePath = path.join(__dirname, '../../uploads', fileName);
+    }
+
+    if (!fs.existsSync(resumePath)) {
+      return res.status(404).json({ success: false, message: 'Resume file not found on server' });
+    }
+
+    const { extractTextFromResume, calculateATSScore } = require('../services/atsService');
+    const resumeText = await extractTextFromResume(resumePath);
+
+    const atsResult = calculateATSScore({
+      resumeText,
+      candidate: application,
+      job: application.job || {}
+    });
+
+    await application.update({
+      atsScore: atsResult.totalScore,
+      atsBreakdown: atsResult
+    });
+
+    res.status(200).json({
+      success: true,
+      message: 'ATS score evaluated successfully',
+      data: application
+    });
+  } catch (error) {
+    console.error('Error scanning ATS for application:', error);
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+// @desc    Batch scan ATS for multiple applications
+// @route   POST /api/admin/applications/batch-scan-ats
+// @access  Admin
+exports.batchScanApplicationsATS = async (req, res) => {
+  try {
+    const { forceRescan = false, jobId = null } = req.body || {};
+    const fs = require('fs');
+    const path = require('path');
+    const { extractTextFromResume, calculateATSScore } = require('../services/atsService');
+
+    const whereClause = {};
+    if (!forceRescan) {
+      whereClause.atsScore = null;
+    }
+    if (jobId && jobId !== 'All') {
+      whereClause.jobId = jobId;
+    }
+
+    const apps = await Application.findAll({
+      where: whereClause,
+      include: [{ model: Job, as: 'job' }]
+    });
+
+    let updatedCount = 0;
+    for (const app of apps) {
+      try {
+        if (!app.resume) continue;
+        let resumePath = app.resume;
+        if (!fs.existsSync(resumePath)) {
+          const fileName = resumePath.split(/[\\/]/).pop();
+          resumePath = path.join(__dirname, '../../uploads', fileName);
+        }
+        if (!fs.existsSync(resumePath)) continue;
+
+        const resumeText = await extractTextFromResume(resumePath);
+        const atsResult = calculateATSScore({
+          resumeText,
+          candidate: app,
+          job: app.job || {}
+        });
+
+        await app.update({
+          atsScore: atsResult.totalScore,
+          atsBreakdown: atsResult
+        });
+        updatedCount++;
+      } catch (err) {
+        console.error(`Failed to scan ATS for app ${app.id}:`, err.message);
+      }
+    }
+
+    res.status(200).json({
+      success: true,
+      message: `Successfully evaluated ATS for ${updatedCount} applications`,
+      updatedCount
+    });
+  } catch (error) {
+    console.error('Error batch scanning ATS:', error);
     res.status(500).json({ success: false, message: error.message });
   }
 };

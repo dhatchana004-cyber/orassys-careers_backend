@@ -64,6 +64,16 @@ const Application = sequelize.define('Application', {
   status: {
     type: DataTypes.ENUM('Applied', 'Under Review', 'Shortlisted', 'Interview', 'Selected', 'Rejected'),
     defaultValue: 'Applied',
+  },
+  atsScore: {
+    type: DataTypes.INTEGER,
+    allowNull: true,
+    defaultValue: null,
+  },
+  atsBreakdown: {
+    type: DataTypes.JSON,
+    allowNull: true,
+    defaultValue: null,
   }
 }, {
   indexes: [

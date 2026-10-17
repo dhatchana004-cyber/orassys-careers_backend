@@ -3,6 +3,7 @@ const {
   createJob, getJobs, getJob, updateJob, deleteJob, updateJobStatus,
   getUsers, getUser, updateUserStatus, deleteUser,
   getApplications, getApplication, updateApplicationStatus, deleteApplication,
+  scanApplicationATS, batchScanApplicationsATS,
   getDashboardStats 
 } = require('../controllers/adminController');
 const { protect, authorize } = require('../middleware/auth');
@@ -35,5 +36,7 @@ router.get('/applications', getApplications);
 router.get('/applications/:id', getApplication);
 router.patch('/applications/:id/status', updateApplicationStatus);
 router.delete('/applications/:id', deleteApplication);
+router.post('/applications/:id/scan-ats', scanApplicationATS);
+router.post('/applications/batch-scan-ats', batchScanApplicationsATS);
 
 module.exports = router;

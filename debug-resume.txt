@@ -1,0 +1,78 @@
+
+
+CAREER OBJECTIVE 
+ 
+ 
+TECHNICAL SKILLS 
+ 
+CERTIFICATIONS 
+INTERNSHIP 
+PROJECTS 
+NIVETHA R 
+      ■ +91 93424 43608 | ✉ nivetha05r@gmail.com | ■ Chennai – 603202 
+ 
+Computer  Science  Engineering  graduate  with  hands-on  experience  in Python,  AWS  Cloud, and  Web 
+Development. Seeking an entry-level Software Engineering role at a product-driven company to build 
+scalable  cloud-native  applications,  contribute  to  agile  teams,  and  grow  into  a  full-stack  developer 
+with deep cloud expertise. 
+     Bachelor of Engineering (B.E) – Computer Science & Engineering  ( 2022 – 2026 )  
+       Sri Ramanujar Engineering College, Anna University, Chennai  
+ 
+1. Languages & Frameworks: Python, JavaScript, Java (Basics), HTML5, CSS3, SQL, MongoDB 
+2. Cloud & DevOps: AWS (EC2, S3, IAM, VPC, RDS, CloudWatch, CloudFront, SNS, SQS, KMS) Git,Github 
+3. Tools & Libraries: VS Code, Pandas, NumPy, Scikit-Learn, Matplotlib, NLP (Unicode text processing) 
+ 
+1. AWS Cloud Practitioner – Prince Infotech, Chennai 
+2. Python for Data Science – Cognitive Class by IBM 
+ 
+Backend Development Intern – Solidpro Engineering Support Pvt Ltd, Guindy, Chennai                      
+( July 2025 – August 2025 ) 
+• Developed backend modules using JavaScript and performed database operations with MongoDB 
+  (NoSQL). 
+• Utilized Git & GitHub for version control and team collaboration in an agile environment. 
+• Supported application testing, debugging, and API integration for internal engineering tools. 
+ 
+Titanic Survival Prediction – Python, Pandas, Scikit-Learn, Matplotlib 
+• Built a Logistic Regression ML model to predict passenger survival with ~80% accuracy. 
+• Performed data preprocessing, feature engineering, and model evaluation using Pandas & Scikit-
+Learn. 
+• Created data visualizations (bar charts, heatmaps) to analyze survival trends and key influencing 
+factors.  
+ 
+ 
+ 
+ 
+EDUCATION 
+
+ ACHIEVEMENTS & HIGHLIGHTS 
+SOFT SKILLS 
+ 
+     
+       Security Audit Dashboard – React.js, Node.js, Express.js, Mongodb atlas 
+• Developed a full-stack Security Audit Dashboard featuring log upload, search, filtering,           
+sorting, and server- side pagination. 
+• Built RESTful APIs with Node.js and Express.js, integrated MongoDB Atlas for efficient data 
+management.  
+• Deployed the application using Vercel, Render, Git, and GitHub.                                                              
+      Automatic Hybrid Tamil Index & Concordance Tool – python, NLP, unicode text processing  
+• Built a Tamil text analysis system that auto-generates word indexes and concordance 
+reports from educational content. 
+• Implemented Unicode text processing and Keyword-in-Context (KWIC) analysis for Tamil 
+language research.  
+• Demonstrated ability to work with non-English NLP and complex text parsing.    
+• Built 3 end-to-end projects combining web  technologies, Data Science, and NLP —      
+deployed on GitHub  
+• AWS Certified with practical knowledge of EC2, S3, IAM, VPC, and cloud monitoring tools. 
+• Successfully completed an industry internship in backend development with real-world 
+database and version control exposure. 
+• Problem Solving • Team Collaboration • Communication • Adaptability • Self-Learning    
+• Agile Mindset 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+                                                                                                                                                                                                                
