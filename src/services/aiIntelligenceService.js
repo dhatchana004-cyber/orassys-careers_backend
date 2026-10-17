@@ -1898,7 +1898,7 @@ const processAIChatMessage = (message, openJobs = []) => {
   ) {
     return {
       sender: 'ai',
-      text: `👋 **Vanakkam & Hello!** I am your **ORASSYS AI Career Copilot**.\n\nI can help you with:\n1. 🔍 **Exploring real job openings** & role requirements\n2. 🛠️ **Finding required skills** for any position\n3. 📄 **Evaluating resume ATS compatibility**\n4. 🎙️ **Practicing role-specific interview questions**\n5. 💰 **Salary ranges & application process**\n\nWhat would you like to explore today?`,
+      text: `👋 **Vanakkam & Hello!** I am your **ORASSYS AI Career Assistant**.\n\nI can help you with:\n1. 🔍 **Exploring real job openings** & role requirements\n2. 🛠️ **Finding required skills** for any position\n3. 📄 **Evaluating resume ATS compatibility**\n4. 🎙️ **Practicing role-specific interview questions**\n5. 💰 **Salary ranges & application process**\n\nWhat would you like to explore today?`,
       suggestions: [
         'What skills do I need for these roles?',
         'What jobs are open right now?',

@@ -98,7 +98,7 @@ exports.evaluateInterviewAnswer = async (req, res) => {
 };
 
 /**
- * 6. AI Chatbot for Job Seekers (Career Copilot)
+ * 6. AI Chatbot for Job Seekers (Career Assistant)
  */
 exports.chatWithCareerCopilot = async (req, res) => {
   try {
@@ -111,6 +111,7 @@ exports.chatWithCareerCopilot = async (req, res) => {
     res.status(500).json({ success: false, message: 'Chat assistant temporarily unavailable' });
   }
 };
+exports.chatWithCareerAssistant = exports.chatWithCareerCopilot;
 
 /**
  * 7. Duplicate & Suspicious Job Detection (Admin / Candidate Protection)

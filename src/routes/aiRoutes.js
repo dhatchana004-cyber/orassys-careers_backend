@@ -18,7 +18,7 @@ router.post('/skill-gap', aiController.analyzeSkillGap);
 router.get('/interview/questions', aiController.getInterviewQuestions);
 router.post('/interview/evaluate', aiController.evaluateInterviewAnswer);
 
-// 6. AI Chatbot for Job Seekers (Career Copilot)
+// 6. AI Chatbot for Job Seekers (Career Assistant)
 router.post('/chat', aiController.chatWithCareerCopilot);
 
 // 7. Duplicate & Suspicious Job Detection
