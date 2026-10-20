@@ -22,8 +22,23 @@ const allowedOrigins = [
   'http://localhost:5174',
   'http://localhost:3000',
   'http://localhost:5000',
-  'http://localhost:5001'
+  'http://localhost:5001',
+  'http://localhost:5002',
+  'http://localhost:5009'
 ];
+
+if (process.env.CLIENT_URL) {
+  try {
+    const parsed = new URL(process.env.CLIENT_URL);
+    if (!allowedOrigins.includes(parsed.origin)) {
+      allowedOrigins.push(parsed.origin);
+    }
+  } catch (e) {
+    if (!allowedOrigins.includes(process.env.CLIENT_URL)) {
+      allowedOrigins.push(process.env.CLIENT_URL);
+    }
+  }
+}
 
 const corsOptions = {
   origin: (origin, callback) => {
